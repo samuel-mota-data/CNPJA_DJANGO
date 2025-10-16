@@ -19,9 +19,9 @@ Frontend ↔ API REST ↔ Engine de Análise ↔ Serviço CNPJA ↔ API Externa
         Banco de Dados + Sistema de Logs
 ```
 
-## 2. ARQUITETURA DE AGENTES
+## 2. ARQUITETURA DE COMPONENTES
 
-### Agente Principal: CNPJAnalysisEngine
+### Componente Principal: CNPJAnalysisEngine
 **Responsabilidade**: Orquestrar todo o processo de análise
 - Coordena busca de dados na API externa
 - Executa todos os critérios de análise
@@ -29,7 +29,7 @@ Frontend ↔ API REST ↔ Engine de Análise ↔ Serviço CNPJA ↔ API Externa
 - Determina status e nível de risco
 - Persiste resultados no banco
 
-### Agente de Serviço: CNPJAService
+### Componente de Serviço: CNPJAService
 **Responsabilidade**: Integração com API externa
 - Validação de CNPJ
 - Consumo da API CNPJA
