@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Análise de CNPJ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 0;
+        }
+        .card-analysis {
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .card-analysis:hover {
+            transform: translateY(-5px);
+        }
+        .score-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: white;
+        }
+        .score-aprovado { background-color: #28a745; }
+        .score-atencao { background-color: #ffc107; color: #000 !important; }
+        .score-reprovado { background-color: #dc3545; }
+        .criteria-item {
+            border-left: 4px solid #e9ecef;
+            padding-left: 1rem;
+            margin-bottom: 1rem;
+        }
+        .criteria-aprovado { border-left-color: #28a745; }
+        .criteria-atencao { border-left-color: #ffc107; }
+        .criteria-reprovado { border-left-color: #dc3545; }
+        .loading {
+            display: none;
+        }
+        .result-section {
+            display: none;
+        }
+        .error-section {
+            display: none;
+        }
+        .history-item {
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .history-item:hover {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="display-4 fw-bold mb-3">
+                        <i class="fas fa-search me-3"></i>
+                        Sistema de Análise de CNPJ
+                    </h1>
+                    <p class="lead mb-4">
+                        Análise automatizada e inteligente de CNPJs para avaliação de risco e adequação para crédito educacional.
+                    </p>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <i class="fas fa-chart-line fa-5x opacity-75"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container my-5">
+        <!-- Analysis Form -->
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card card-analysis">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">
+                            <i class="fas fa-calculator me-2"></i>
+                            Análise de CNPJ
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <form id="analysisForm">
+                            <div class="mb-3">
+                                <label for="cnpj" class="form-label">CNPJ</label>
+                                <input type="text" class="form-control" id="cnpj" 
+                                       placeholder="Digite o CNPJ (apenas números)" 
+                                       maxlength="14" required>
+                                <div class="form-text">
+                                    Digite apenas os números do CNPJ (14 dígitos)
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-search me-2"></i>
+                                Analisar CNPJ
+                            </button>
+                        </form>
+
+                        <!-- Loading -->
+                        <div class="loading text-center mt-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Analisando...</span>
+                            </div>
+                            <p class="mt-2">Analisando CNPJ, aguarde...</p>
+                        </div>
+
+                        <!-- Error -->
+                        <div class="error-section alert alert-danger mt-3" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <span id="errorMessage"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div class="result-section mt-5">
+            <div class="row">
+                <!-- Company Info -->
+                <div class="col-lg-6">
+                    <div class="card card-analysis">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-building me-2"></i>
+                                Informações da Empresa
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="companyInfo">
+                                <!-- Company info will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analysis Result -->
+                <div class="col-lg-6">
+                    <div class="card card-analysis">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-chart-pie me-2"></i>
+                                Resultado da Análise
+                            </h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <div id="overallScore" class="score-circle mx-auto mb-3">
+                                <!-- Score will be populated here -->
+                            </div>
+                            <h4 id="statusResult" class="mb-2"></h4>
+                            <p id="riskLevel" class="text-muted mb-3"></p>
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>
+                                Processado em <span id="processingTime"></span> segundos
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Criteria Details -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card card-analysis">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="mb-0">
+                                <i class="fas fa-list-check me-2"></i>
+                                Critérios de Análise
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="criteriaDetails">
+                                <!-- Criteria will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- History -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card card-analysis">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-history me-2"></i>
+                            Histórico de Análises
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="analysisHistory">
+                            <!-- History will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+        <div class="container">
+            <p class="mb-0">
+                <i class="fas fa-graduation-cap me-2"></i>
+                Sistema de Análise de CNPJ - Desenvolvido para avaliação de crédito educacional
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // CNPJ formatting
+        document.getElementById('cnpj').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            e.target.value = value;
+        });
+
+        // Form submission
+        document.getElementById('analysisForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const cnpj = document.getElementById('cnpj').value;
+            if (cnpj.length !== 14) {
+                showError('CNPJ deve ter 14 dígitos');
+                return;
+            }
+
+            analyzeCNPJ(cnpj);
+        });
+
+        function analyzeCNPJ(cnpj) {
+            // Show loading
+            document.querySelector('.loading').style.display = 'block';
+            document.querySelector('.result-section').style.display = 'none';
+            document.querySelector('.error-section').style.display = 'none';
+
+            fetch('/api/analyze/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ cnpj: cnpj })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.querySelector('.loading').style.display = 'none';
+                
+                if (data.success) {
+                    displayResults(data.data);
+                } else {
+                    showError(data.error);
+                }
+            })
+            .catch(error => {
+                document.querySelector('.loading').style.display = 'none';
+                showError('Erro na comunicação com o servidor');
+            });
+        }
+
+        function displayResults(data) {
+            // Company info
+            document.getElementById('companyInfo').innerHTML = `
+                <h6><strong>${data.company_name}</strong></h6>
+                <p class="mb-1"><strong>CNPJ:</strong> ${formatCNPJ(data.cnpj)}</p>
+                <p class="mb-1"><strong>Status:</strong> <span class="badge bg-success">${data.status}</span></p>
+                <p class="mb-1"><strong>Risco:</strong> <span class="badge bg-${getRiskColor(data.risk_level)}">${data.risk_level}</span></p>
+            `;
+
+            // Overall score
+            const scoreElement = document.getElementById('overallScore');
+            scoreElement.textContent = data.overall_score;
+            scoreElement.className = `score-circle mx-auto mb-3 score-${data.status.toLowerCase()}`;
+
+            // Status and risk
+            document.getElementById('statusResult').textContent = data.status;
+            document.getElementById('riskLevel').textContent = `Nível de Risco: ${data.risk_level}`;
+            document.getElementById('processingTime').textContent = data.processing_time.toFixed(2);
+
+            // Criteria
+            const criteriaHtml = data.criteria.map(criteria => `
+                <div class="criteria-item criteria-${criteria.passed ? 'aprovado' : 'reprovado'}">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-1">${criteria.name.replace('_', ' ').toUpperCase()}</h6>
+                            <p class="mb-0 text-muted">${criteria.description}</p>
+                        </div>
+                        <div class="text-end">
+                            <span class="badge bg-${criteria.passed ? 'success' : 'danger'}">${criteria.score}</span>
+                            <small class="d-block text-muted">Peso: ${(criteria.weight * 100).toFixed(0)}%</small>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('criteriaDetails').innerHTML = criteriaHtml;
+
+            // Show results
+            document.querySelector('.result-section').style.display = 'block';
+
+            // Load history
+            loadHistory();
+        }
+
+        function showError(message) {
+            document.getElementById('errorMessage').textContent = message;
+            document.querySelector('.error-section').style.display = 'block';
+        }
+
+        function formatCNPJ(cnpj) {
+            return cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+        }
+
+        function getRiskColor(riskLevel) {
+            switch(riskLevel.toLowerCase()) {
+                case 'baixo': return 'success';
+                case 'médio': return 'warning';
+                case 'alto': return 'danger';
+                default: return 'secondary';
+            }
+        }
+
+        function loadHistory() {
+            fetch('/api/history/')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const historyHtml = data.data.map(item => `
+                        <div class="history-item p-3 border-bottom" onclick="showAnalysisDetail(${item.id})">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">${item.company_name}</h6>
+                                    <p class="mb-0 text-muted">${formatCNPJ(item.cnpj)}</p>
+                                </div>
+                                <div class="text-end">
+                                    <span class="badge bg-${getRiskColor(item.risk_level)}">${item.overall_score}</span>
+                                    <small class="d-block text-muted">${item.status}</small>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    document.getElementById('analysisHistory').innerHTML = historyHtml || '<p class="text-muted text-center">Nenhuma análise encontrada</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao carregar histórico:', error);
+            });
+        }
+
+        function showAnalysisDetail(analysisId) {
+            fetch(`/api/analysis/${analysisId}/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    displayResults(data.data);
+                    // Scroll to results
+                    document.querySelector('.result-section').scrollIntoView({ behavior: 'smooth' });
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao carregar detalhes:', error);
+            });
+        }
+
+        // Load history on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadHistory();
+        });
+    </script>
+</body>
+</html>

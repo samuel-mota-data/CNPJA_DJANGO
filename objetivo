@@ -1,0 +1,257 @@
+Teste Prático - Analista de IA (Multiagentes)
+
+
+ 📋 Contexto do Desafio
+
+A Principia é uma fintech que atua no setor de crédito educacional. Parte fundamental do nosso negócio envolve analisar instituições de ensino (IES) que solicitam nossos serviços de gestão de recebíveis e financiamento estudantil.
+
+Situação atual:
+- Analistas gastam ~30 minutos por CNPJ verificando manualmente informações da Receita Federal
+- O processo envolve consultar dados cadastrais, capital social, histórico, atividades e identificar restrições
+- As decisões variam entre analistas devido à falta de padronização
+- O volume crescente de solicitações está criando gargalos operacionais
+
+Objetivo:
+Automatizar a análise preliminar de CNPJs usando um sistema baseado em agentes de IA, reduzindo o tempo de análise e padronizando as decisões.
+
+
+ 🎯 O Desafio
+
+Você deve projetar e implementar um protótipo de sistema de análise automatizada de CNPJs utilizando agentes de IA.
+
+O teste está dividido em duas partes complementares:
+
+ Parte 1: Proposta de Arquitetura 
+Documente sua visão completa da solução
+
+ Parte 2: POC Funcional
+Implemente um protótipo funcional que demonstre sua arquitetura
+
+
+ 📐 Parte 1: Proposta de Arquitetura
+
+Crie um documento técnico que apresente sua solução completa para o problema. Você tem total liberdade para desenhar a arquitetura como achar mais adequado.
+
+ Tópicos Obrigatórios
+
+Seu documento deve abordar:
+
+ 1. Visão Geral da Solução
+- Descrição de alto nível da abordagem escolhida
+- Principais componentes do sistema
+- Como os componentes se comunicam
+
+ 2. Arquitetura de Agentes
+- Quais agentes você propõe (se houver)
+- Responsabilidade de cada agente
+- Fluxo de informação entre agentes
+- Justificativa das escolhas arquiteturais
+
+ 3. Estratégia de Análise
+- Quais dados do CNPJ serão analisados
+- Critérios para classificação de risco/adequação
+- Como o sistema chegará a uma decisão final
+- Formato da saída (score, classificação, justificativas)
+
+ 4. Stack Tecnológico
+- Linguagens, frameworks e bibliotecas escolhidos
+- Ferramentas de IA (se aplicável)
+- Justificativa das escolhas técnicas
+- Considerações de custo (APIs, tokens LLM, etc)
+
+ 5. Estratégia de Implementação
+- Como seria o MVP (mínimo viável)
+- Roadmap de evolução (features futuras)
+- Principais desafios técnicos antecipados
+- Estratégia de testes e validação
+
+ 6. Observabilidade e Monitoramento
+- Como garantir rastreabilidade das decisões
+- Logs e métricas importantes
+- Como identificar e corrigir erros
+
+ Formato Livre
+
+Você pode estruturar o documento como preferir:
+- 📄 Markdown, PDF ou Google Docs
+- 📊 Incluir diagramas (Mermaid, Draw.io, Excalidraw, etc)
+- 🎨 Usar o formato que melhor comunique suas ideias
+
+Extensão sugerida: 3-6 páginas (foque na clareza, não no volume)
+
+
+ 💻 Parte 2: POC Funcional
+
+Implemente um protótipo funcional que demonstre sua arquitetura proposta.
+
+ Requisitos Mínimos
+
+Seu código deve:
+
+1. ✅ Consumir dados de CNPJ via API pública:
+   - Use a API gratuita: `https://open.cnpja.com/office/{cnpj}`
+   - Documentação: https://open.cnpja.com
+
+2. ✅ Processar e analisar os dados retornados:
+   - Implementar pelo menos 4 critérios de análise
+   - Exemplos: status ativo, tempo de abertura, capital social, restrições cadastrais
+
+3. ✅ Gerar output estruturado com:
+   - Classificação final (aprovado/atenção/reprovado ou similar)
+   - Score ou indicador de risco
+   - Justificativas das decisões tomadas
+
+4. ✅ Funcionar end-to-end:
+   - Receber CNPJ como input
+   - Executar análise completa
+   - Retornar resultado
+
+ Escopo Flexível
+
+Você NÃO precisa implementar toda a arquitetura proposta. O POC deve demonstrar:
+- Que você sabe programar e integrar sistemas
+- Que suas escolhas arquiteturais fazem sentido na prática
+- Seu estilo de código e organização
+
+Exemplos de escopos válidos:
+- Script Python simples que implementa a lógica core
+- Sistema com 1-2 agentes funcionando
+- API REST básica
+- CLI com comandos
+- Notebook com análise exploratória + código
+- Sistema completo (se tiver tempo e vontade!)
+
+ Requisitos Técnicos
+
+- 🐍 Python obrigatório (pode usar outras linguagens como complemento)
+- 📦 `requirements.txt` ou `pyproject.toml` com dependências
+- 📖 README com instruções claras de execução
+- 🔐 `.env.example` para variáveis de ambiente necessárias
+- 🧪 Tratamento básico de erros (CNPJ inválido, API fora do ar, etc)
+
+
+ 📦 Entregáveis
+
+ O que enviar:
+
+1. 📄 Documento de Arquitetura
+   - Formato: PDF, Markdown ou link (Google Docs/Notion)
+   - Nome sugerido: `ARQUITETURA.md` ou `ARQUITETURA.pdf`
+
+2. 💾 Código do POC
+   - Repositório GitHub (público ou privado com acesso)
+   - Estrutura organizada
+   - README com instruções de setup e execução
+
+3. 🎥 Demonstração (opcional mas recomendado)
+   - Screenshots da execução OU
+   - Vídeo curto (2-3 min) mostrando funcionamento OU
+   - GIF animado do terminal/interface
+
+ Como enviar:
+- Link do repositório GitHub via email/plataforma de recrutamento
+- Se repositório privado, adicionar usuário: AndreSak
+
+
+
+ 
+ Exemplos de Critérios de Análise
+
+Você pode usar, adaptar ou ignorar estes critérios:
+
+Critérios Positivos:
+- Empresa ativa há mais de 2 anos
+- Capital social compatível com operação educacional (>R$ 100k)
+- Atividade principal relacionada a educação (códigos CNAE específicos)
+- Sem restrições cadastrais graves
+
+Critérios de Atenção:
+- Empresa recém-criada (< 2 anos)
+- Múltiplas mudanças societárias recentes
+- Inscrições estaduais bloqueadas
+- Capital social baixo para o porte
+
+Critérios Negativos:
+- Status inativo, suspensa ou baixada
+- Atividade principal incompatível com educação
+- Restrições cadastrais múltiplas
+
+
+ Diferenciais (não obrigatórios)
+
+Elementos que podem destacar sua entrega:
+- 🧪 Testes automatizados
+- 📊 Análise exploratória dos dados
+- 🎨 Interface (web, CLI elegante, bot)
+- 🔍 Observabilidade (logs estruturados, métricas)
+- 🤖 Uso efetivo de frameworks de agentes
+- 📈 Batch processing de múltiplos CNPJs
+- 🎯 Features criativas que agreguem valor
+- 🔄 Código preparado para evolução
+
+---
+
+ ❓ Dúvidas Frequentes
+
+P: Posso usar frameworks de agentes como LangChain/CrewAI?  
+R: Sim! Use as ferramentas que achar mais adequadas. Justifique suas escolhas na arquitetura.
+
+P: Preciso implementar todos os agentes que documentar?  
+R: Não. O POC pode ser um subset da arquitetura completa. Deixe claro no README o que foi implementado.
+
+P: Posso usar LLMs (GPT, Claude, etc)?  
+R: Sim, se fizer sentido para sua solução. Documente custos e considerações na arquitetura.
+
+P: E se eu não conseguir implementar tudo no prazo?  
+R: Sem problema. Entregue o que conseguir fazer bem feito. Explique no README o que falta e como implementaria.
+
+P: Posso fazer mais do que o pedido?  
+R: Claro! Se tiver ideias e tempo, pode expandir. Mas priorize qualidade sobre quantidade.
+
+P: A API CNPJA tem limite de requisições?  
+R: A API gratuita tem rate limit. Use com moderação nos testes. Implemente cache se necessário.
+
+P: Preciso criar interface visual?  
+R: Não é obrigatório. CLI ou scripts Python são suficientes. Interface é diferencial.
+
+P: Posso tirar dúvidas durante o teste?  
+R: Sim! Envie email para nós. Parte da avaliação é saber pedir ajuda quando necessário.
+
+ 🎯 Dicas Finais
+
+Para ir bem no teste:
+
+✅ Comece pelo documento de arquitetura - ajuda a organizar as ideias antes de codar
+
+✅ Seja pragmático - MVP funcional é melhor que arquitetura perfeita não implementada
+
+✅ Documente suas decisões - explique o "porquê", não apenas o "como"
+
+✅ Trate erros básicos - CNPJ inválido, API offline, dados faltantes
+
+✅ README é seu melhor amigo - ele é a primeira impressão que damos ao seu código
+
+✅ Seja você mesmo - queremos conhecer seu estilo e forma de pensar
+
+❌ Não se perca em detalhes - foque no core da solução
+
+❌ Não copie código sem entender - preferimos código simples e próprio
+
+❌ Não ignore a arquitetura 
+
+
+
+
+ 📬 Contato
+
+Dúvidas sobre o teste? Entre em contato:
+- 📧 Email: andre.augusto@principia.net e rodrigo.ramos@principia.net 
+
+
+Boa sorte! Estamos ansiosos para ver sua solução! 🚀
+
+---
+
+Principia - Impulsionando a Educação com IA
+
+
